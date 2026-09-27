@@ -9,6 +9,7 @@ After each session is generated, prompt the user to reply with **a single number
 ```
 1 = continue to next session (this one is OK, pass)
 0 = generate all remaining sessions, no more per-session review (whole-book mode)
+W{week} = spot-check/re-do only the given weeks (e.g. W2 = only week 2; W5-8 = weeks 5-8; skips per-session review for large 18-week books)
 2 = regenerate images
 3 = regenerate cases
 4 = regenerate content
@@ -37,6 +38,11 @@ After each session is generated, prompt the user to reply with **a single number
   - Single-session mode → finalize, output Word, task done.
   - Whole-book mode (default per-session review) → next session, repeat "generate → numeric confirm".
 - User replies `0` → whole-book mode switches to fast mode: output all remaining sessions at once, no more per-session confirmation; when delivering, note "you can ask to adjust a specific session by number".
+- User replies `W{week}` (e.g. W2, W5-8) → only generate/re-do the given weeks as a spot check; other weeks stay pending; after the spot check passes, `0` can switch to batch.
+
+## Fast-Track Collection (one-shot packaging)
+
+- Default is one question at a time; if the user says "stop asking" or provides everything at once (course name + hours + type + platform + template), **execute with the packaged info** without further per-item questions; fill gaps via the course-name fallback (SKILL.md section 1).
 
 ## Whole-Book Flow
 

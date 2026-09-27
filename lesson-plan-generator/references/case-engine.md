@@ -27,6 +27,10 @@ Class questions        — ≥2 questions for students (can include answer hints
 ### Key Requirements (from production testing)
 - **Implementation process must be detailed and actionable**: at least 3 steps, each written as "what to do, how" (e.g. "① set the character as a smart-but-playful pink fox, ② accumulate fans through park interaction and short-video personas") — never vague lines like "demonstrate the case".
 - **Results & data is optional**: not every case has public data. Only write specific numbers with a reliable source (marked "compiled from public sources, please verify"); otherwise write qualitative outcome — **never invent data**.
+- **Qualitative-outcome template (no public data, v1.1)**: write in the three-part form "what was done → what effect/standard was reached → verifiable basis"; never invent numbers. Examples:
+  - "Students completed the《××》dynamic poster and it was played on the campus digital screen, meeting the client acceptance standard (in-class qualitative outcome, no public data)"
+  - "The work was shortlisted for the campus innovation exhibition and passed instructor acceptance (qualitative outcome, no public quantitative data)"
+- **Industry-academia link (optional, vocational schools, v1.1)**: for higher/secondary vocational courses, if a case's implementation maps to a real job task, add one line "industry-academia: corresponds to the ×× job task of the ×× course" (e.g. an e-commerce graphic designer's detail-page task). Write it when a clear job mapping exists, skip otherwise — never force or invent a job title.
 - **Cases must serve the session's objectives**; no padding cases for bulk.
 - At least 1 case per new knowledge point; 2 for key/difficult points (one deep + one transfer).
 
@@ -43,6 +47,21 @@ Class questions        — ≥2 questions for students (can include answer hints
 | Secondary school | Life-context case: scenario → knowledge link → inquiry activity → conclusion |
 
 Fallback cases must be marked "example case — please replace with a local real case".
+
+### Full Example (v1.1, for replication, engineering/medicine)
+
+Using "centrifugal pump cavitation" (chemical-process machinery basics) as the full six-element example:
+
+```
+Background: A chemical plant's circulating-water pump lost flow and ran noisily after 3 months; inspection found honeycomb pitting at the impeller inlet.
+Relation to objectives: teaches "cavitation and its hazards", grounding the abstract bubble theory in a real equipment failure.
+Implementation process: ① show pump-disassembly photos/animation, locate the pitting; ② explain the cavitation chain: inlet pressure < vapor pressure → bubbles form → collapse at the high-pressure zone → impact erodes the metal surface; ③ use the NPSH (net positive suction head) formula to check whether this pump meets the requirement; ④ propose a fix (raise inlet level / replace pump).
+Results & data: failure photos and maintenance records (class demo material, no public data — qualitative outcome).
+Teaching comment: students easily confuse "cavitation" with "air binding" — cavitation is inside the impeller, air binding in the suction line; transferable to feed pumps, ship propellers, etc.
+Class questions: ① Why does cavitation occur mostly at the back of the impeller inlet? ② How do you tell cavitation from air binding when pump flow drops?
+```
+
+> Frameworks are structure-only; production cases should be completed to the full form above; engineering courses should ship at least one full subject-specific example.
 
 ## Case Title Convention
 

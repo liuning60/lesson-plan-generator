@@ -56,7 +56,8 @@ Ask one question at a time (never dump all at once). Design replies to be lazy-u
 ### 3.2 Case engine (fixes hollow content; six elements)
 - Embed a case in every knowledge/skill point in a fixed six-element structure (**no "teaching delivery advice" element**):
   `Background → relation to teaching objectives → implementation process (stepwise, actionable) → results & data → teaching comment → class questions (≥2)`
-- **Results & data is optional**: not every case has public data; write "qualitative outcome, no public data" when absent — never fabricate numbers.
+- **Results & data is optional**: not every case has public data; when absent write a qualitative outcome in the three-part form "what was done → what effect/standard was reached → verifiable basis" (template in case-engine.md) — never fabricate numbers.
+- **Industry-academia link (optional, vocational schools)**: for higher/secondary vocational courses, if a case maps to a real job task, add "industry-academia: corresponds to the ×× job task of ×× course"; write it when it applies, skip when it doesn't.
 - Cases must be **detailed and actionable** (implementation process in steps, replicable operations); never write vague lines like "this case demonstrates XX".
 - See `references/case-engine.md`.
 
@@ -65,6 +66,7 @@ Ask one question at a time (never dump all at once). Design replies to be lazy-u
 - Combination strategy: case-related images prefer web search for real images (similar works, case screenshots, photos) with sources noted; the rest AI-generated teaching diagrams (**prompts must force "no watermark, no logo, no text watermark"**).
 - UI option A: no screenshot placeholders; option B: write "insert XX screenshot here" placeholders.
 - Check AI-generated images for OCR typos in embedded titles (common defect) and regenerate if found.
+- **Structural-accuracy risk (engineering courses)**: for structure-sensitive images (equipment cutaways, section views, circuit diagrams, assemblies), AI generation can draw structures wrong (flange reversed, wrong blade count) — prefer web or teacher-provided images; if AI-generated, verify structure part by part (see image-engine.md).
 - See `references/image-engine.md`.
 
 ### 3.4 Time budget (budget first, then content; fixes "content can't fill the hours")
@@ -83,6 +85,7 @@ After each session, prompt the user to reply with **a single number** (no typing
 ```
 1 = continue to next session (this one is OK)
 0 = generate all remaining sessions, no more per-session review (whole-book mode)
+W{week} = spot-check/re-do only the given weeks (e.g. W2 = review only week 2; W5-8 = review weeks 5-8; avoids per-session review for large books)
 2 = regenerate images
 3 = regenerate cases
 4 = regenerate content
@@ -122,6 +125,7 @@ The content flow (collect → pre-research → cases → images → review → f
 - **File-lock handling**: if the target docx is open in Word it cannot be overwritten — output to a temp filename first (e.g. "-formatted-v2.docx"), verify, then ask the user to close the original before replacing; rerun audit after replacement.
 - On **Doubao**, Word read/create/template/audit always uses the word skill flow (read.py, audit.py, catalogue.py, template branch) — never hand-roll a simplified reader; on other platforms substitute per the mapping table, keeping the same acceptance criteria.
 - See `references/template-and-update.md`.
+- **Validation script (optional, when Python is available)**: `scripts/validate_lesson_plan.py` auto-checks "phase minutes sum to session total" and "image count ≥ minimum" (input format in the script header); without Python, verify manually per the acceptance checklist — the rules are the same.
 
 ## Lessons Learned
 
@@ -136,4 +140,5 @@ This skill has been through a full production test (higher-vocational "Digital V
 | `references/image-engine.md` | Image minimums, web-vs-AI tradeoffs & copyright, watermark handling, UI image options, docx embedding & size control |
 | `references/interaction-protocol.md` | Numeric protocol full rules, regeneration handling, whole-book flow |
 | `references/template-and-update.md` | School-template and old-plan update flows, Word-lock replacement |
-| `references/lessons-learned.md` | Production pitfalls (location failures, time duplication, OCR typos, size, replacement) and fixes |
+| `references/lessons-learned.md` | Production pitfalls (location failures, time duplication, OCR typos, size, replacement) and fixes; community review feedback |
+| `scripts/validate_lesson_plan.py` | Auto-validation script for time budget & image minimums (optional, Python) |

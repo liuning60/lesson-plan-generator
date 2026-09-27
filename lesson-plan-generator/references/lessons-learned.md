@@ -43,6 +43,19 @@ This file records problems discovered and fixed during a real production run of 
 6. **OCR typos in generated images**: embedded titles garbled ("color three elements" etc.) → inspect every image, regenerate any with a typo.
 7. **Delivery**: copy compressed images to a user-visible folder (lesson01-18 subdirectories) for self-check; deliver the docx via the presentation tool; state fill-in placeholders (instructor name / class / course code / title).
 
+## IV.5. Community Review Feedback & v1.1 Improvements (xiaping trial)
+
+After publishing the trial version on Xiaping, 8 reviews arrived (5× five-star + 3× four-star, weighted 4.6). Each was verified against the actual files; 5 adopted, 1 rejected:
+
+| Source | Suggestion | Verification | Action |
+|---|---|---|---|
+| 燕老板 | Whole-book review is too heavy; add week/module spot checks | Partly true (0 = batch existed, no spot-check tier) | Added `W{week}` spot-check command + fast-track collection |
+| 土匪 / QClaw | Weak coverage of engineering/other subjects; one-line templates, no full examples | True | Added full six-element "centrifugal pump cavitation" example; structural-risk note into image-engine |
+| 燕老板 | Higher-vocational courses need industry-academia links; force job-task mapping | True | Added optional "industry-academia link" enhancement (not forced) |
+| Liễu Hồ Yên Thiểm | No auto-validation script (time sums / image counts / OCR) | True | Added scripts/validate_lesson_plan.py (auto-checks time budget & image minimums) |
+| QClaw | Results & data optional but no "qualitative description" template | True | Added three-part qualitative-outcome template in case-engine |
+| 小阿飘Agent | image-engine.md / interaction-protocol.md are empty | **Not true** (both files complete; reviewer read them in a broken environment) | Not adopted |
+
 ## V. Acceptance Checklist (after every generation)
 
 - [ ] Audit (--source clean template) exits 0

@@ -27,6 +27,14 @@ Verify per session in whole-book mode; any session below the minimum must be top
 - **Option A (recommended)**: all AI-generated teaching diagrams, **no screenshot placeholders**. Teachers usually don't take their own screenshots; A is less work and immediately usable.
 - **Option B**: leave "insert XX screenshot here" placeholders for the teacher to add their own classroom screenshots later.
 
+## Structural-Accuracy Risk (engineering courses — read first, v1.1)
+
+For **structure-sensitive images** (equipment cutaways, section views, circuit diagrams, mechanical assemblies, piping layouts), AI generation can draw the **structure wrong** (flange reversed, wrong impeller blade count, wrong circuit connections, wrong piping direction) — far worse for teaching than a typo.
+
+- For engineering courses, **structural/principle diagrams prefer web or teacher-provided images** (textbook figures, manufacturer manual figures, real photos); AI generation is only for rough illustration.
+- If AI-generated, **verify the structure part by part** after generation: part counts, orientation, and connections against textbook common sense; when unsure, switch to a web image or a placeholder "insert textbook page N diagram here".
+- This joins the OCR-typo check under the "2 = regenerate images" human-verification dimension.
+
 ## Sources & Copyright
 
 - Prefer: textbook images, official sites, official case images, commercially usable sources (note author/site).
