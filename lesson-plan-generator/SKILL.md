@@ -1,144 +1,149 @@
 ---
-name: lesson-plan-generator
-description: Generate lesson plans from a course name — full-term lesson plan books (cover + course info + per-session tables) or single sessions; apply school Word templates or refresh old lesson plans. Solves the two core AI lesson-plan weaknesses: hollow content (no concrete cases) and poor readability (no images). Ensures precise time budgeting and strict, submission-ready formatting. Use when the user asks to "generate a lesson plan", "write a lesson plan", "prepare a class", "create a lesson plan from a course name", "fill a school template", or "update an old lesson plan".
+name: 教案生成器
+description: 根据课程名称生成教案，支持整本教案（封面+课程信息+每次课表）与单节课教案、套用学校 Word 模板、更新老教案；核心解决 AI 教案"内容空洞缺具体案例、无配图可读性差"两大痛点，并保证时间预算精确、格式严谨可直接提交。当用户要求"生成教案""写教案""备课""根据课程名出教案""套学校模板出教案""更新老教案"时使用。
 ---
 
-# Lesson Plan Generator
+# 教案生成（lesson-plan-generator）
 
-Generates Word lesson plans with concrete cases, images, exact time budgets, and strict formatting that teachers can submit directly. Collect required inputs before generating; emphasize **structured cases (six elements)** and **illustration minimums**; when applying a school template, fill its fields and preserve fixed content.
+根据课程名称生成有案例、有配图、时间分配精确、排版严谨、可提交的 Word 教案。生成前必须采集必要信息；生成内容强调**具体案例支撑（六要素）**与**图文并茂（配图下限）**；套学校模板时按模板栏目填充、固定内容保留。
 
-## Workflow Overview
+## 工作流总览
 
-1. **Collect inputs** (9 must-ask items + optional items, one question at a time)
-2. **Confirm mode** (whole book / single session — always ask)
-3. **Whole-book mode: pre-research & verify** (search talent-training plans → draft teaching objectives & content framework → user verifies)
-4. **Generate content** (case engine + image engine + time budget, first session or whole book)
-5. **Interactive review** (numeric protocol drives iteration)
-6. **Output Word** (free layout / school template / old-plan update; formatting rules apply)
+1. **采集输入**（必问 9 项 + 可选补充，一次一问）
+2. **确认模式**（整本 / 单节，必问）
+3. **整本模式先预研核实**（检索人才培养方案 → 出教学目标与内容框架 → 用户核实）
+4. **生成内容**（案例六要素引擎 + 配图引擎 + 时间预算，先出第一节/整本）
+5. **交互审核**（数字协议驱动迭代，见 references/interaction-protocol.md）
+6. **输出 Word**（自由版式 / 套学校模板 / 老教案更新，走 word skill 流程，按排版规范渲染）
 
-## 1 · Collect Inputs
+## 1 · 采集输入
 
-Ask one question at a time (never dump all at once). Design replies to be lazy-user friendly: a number or single word should suffice.
+生成前依次询问（**一次一问**，不要一次性抛全部问题；回复设计成"懒人友好"：能用数字/单字答就不让用户打字）：
 
-**Must-ask (in order)**
-1. **Mode**: whole-book lesson plan / single-session lesson plan (most important, see section 2)
-2. **Level & subject**: secondary school / university (higher vocational 高职, secondary vocational 中职 follow university template); subject name
-3. **Course name** (e.g. "Digital Visual Design", "VFX Production Techniques")
-4. **Hours**: whole-book mode needs "weeks × sessions per week = total hours" (e.g. 18 weeks × 4 sessions = 72 hours → usually 18 sessions × 4 hours each); single-session mode needs hours of that session
-5. **Course type & time composition**: pure theory / computer lab / lab + practice / mixed; sessions per week, lab vs practice split, session length (e.g. 4 sessions/week, 2 lab + 2 practice, 180 min per session). **Set the time budget before writing content** — never write content that under-fills or overflows the class time
-6. **Image preference**: all AI-generated / web images first / mixed (case images prefer real web images with sources, the rest AI-generated). **Case images are the core** — real images for real cases are best; the rest AI-generated
-7. **UI image option**: A = all AI-generated, no screenshot placeholders (recommended; teachers usually do not take their own screenshots); B = leave "insert XX screenshot here" placeholders
-8. **Template**: whether to apply a school template (user provides .docx/.doc); when multiple school templates exist ask which one, or adapt any template via "read structure, fill by fields"
-9. **Runtime platform**: default Doubao; options Doubao / Claude Code / Cursor / other — determines tool calls (see "Cross-Platform Tool Mapping" in section 4.5; the content flow is identical on all platforms)
+**必问 8 项（按顺序）**
+1. **模式**：整本教案 / 单节课教案（最优先，见第 2 节）
+2. **学段学科**：初高中 / 大学（高职、中职按大学模板处理）；学科名称
+3. **课程名称**（如"数字视觉设计""特效制作技术"）
+4. **课时数**：整本模式需"周数 × 每周节数 = 总课时"（如 18 周 × 4 节 = 72 课时 → 通常拆为 18 次课 × 每次 4 课时）；单节模式需本次课课时
+5. **课程类型与时间构成**：纯理论 / 上机 / 上机+实训 / 混合；每周几节、上机与实训各几节、单次课多长时间（如每周 4 节、上机 2 实训 2、每次课 180 分钟）。**必须先定时间预算再写内容**，杜绝内容不足或超时
+6. **配图偏好**：全 AI 生成 / 网图优先 / 混合（案例图优先真实网图并标注来源，其余 AI 生成）。**案例配图是核心**，能找到相关真实图片最好；其余用 AI 生成
+7. **界面图选项**：A＝全部 AI 生成、不留截图占位；B＝留"此处插入 XX 截图"占位（**推荐**：界面图需覆盖桌面软件（含 CAD/MATLAB 等专业软件）/手机 App/网页全类型，专业软件界面 AI 生成必乱码，真截图只能老师自己截）
+8. **模板**：是否套学校模板（用户提供 .docx/.doc 模板）；多所学校模板并存时询问用哪一份，或以"读结构、按栏目填"的方式适配任意模板
+9. **运行平台**：默认豆包；可选 豆包 / Claude Code / Cursor / 其他——决定工具调用方式（见下方"跨平台工具映射表"；中文版默认豆包，其他平台按映射表替换即可，内容流程不变）
 
-**Optional** (fill if available, never block on them)
-- Textbook name & edition
-- Teaching objectives / requirements / differentiated instruction (group students by level?)
-- Key points & difficulties
-- Class, teacher, semester/academic year
+**可选补充**（有则填，无则跳过，不得卡住）
+- 教材名称与版本
+- 教学目标 / 教学要求 / 分层教学要求（是否按学生水平分层设计任务）
+- 教学重点难点
+- 授课班级、任课教师、学期学年
 
-**Fallback when only a course name is given**: first search online for the course's common textbook outline, chapter structure, syllabus, and relevant talent-training plans to build the content framework; content assembled from search must be marked "compiled from public sources, please verify with your teacher/school".
+**只有课程名时的兜底**：用户只给了课程名称时，先联网检索该课程的教材目录、章节结构、教学大纲、相关人才培养方案来补全内容框架；生成内容中检索整理的部分**必须标注**"此部分由检索资料整理，请老师核对"。
 
-## 2 · Confirm Mode
+## 2 · 确认模式
 
-- **Always ask**: generate everything at once (whole book) or a single session. Do not default, do not skip.
-- **Single-session mode**: around the course's talent-training plan / objectives, generate one session → numeric review → finalize.
-- **Whole-book mode**: default **session-by-session review** — generate one session, user confirms, continue; user reply `0` switches to one-shot generation of all remaining sessions without per-session confirmation.
-- When asking about mode, also explain the numeric protocol (section 4) so users know how to reply from the start.
+- 生成前**必须询问**：一次生成全部（整本）还是单节。不默认，不省略。
+- **单节模式**：围绕课程人才培养方案/教学目标，生成一节 → 数字审核 → 定稿交付。
+- **整本模式**：默认**逐节审核**——生成一节 → 用户确认 → 继续下一节；用户回复 `0` 可切换为一次输出全部、不再逐节确认。
+- 询问模式的同时说明数字审核协议（第 4 节），让用户一开始就知道怎么回复。
 
-## 3 · Generate Content
+## 3 · 生成内容
 
-### 3.1 Whole-book pre-research & verify (required; fixes "content without basis")
-- Before generating sessions, **search the web for the course's talent-training plan / professional teaching standard** (e.g. MOE higher-vocational teaching standards, college talent-training plans) as the basis for teaching objectives.
-- Produce an ~500-word **teaching objectives & content framework** (level & course goals → competency requirements → content modules & week arrangement) and **wait for user verification** (users read this carefully). Only after confirmation proceed to per-session or batch generation.
-- Cite sources for anything retrieved; never invent specific figures without a reliable source.
+### 3.1 整本模式预研核实（必做，解决"内容空洞无依据"）
+- 开始逐节生成前，先**联网检索该课程对应的人才培养方案 / 专业教学标准**（如教育部高职专业教学标准、院校人才培养方案），作为教学目标的依据。
+- 产出约 500 字的**教学目标与教学内容框架**（学段课程目标 → 能力要求 → 内容模块与周次安排），**等待用户核实**（用户此时会看得很仔细）。用户确认后再进入逐节/批量生成。
+- 检索引用须标注来源；无可靠来源的数据不写具体数字。
 
-### 3.2 Case engine (fixes hollow content; six elements)
-- Embed a case in every knowledge/skill point in a fixed six-element structure (**no "teaching delivery advice" element**):
-  `Background → relation to teaching objectives → implementation process (stepwise, actionable) → results & data → teaching comment → class questions (≥2)`
-- **Results & data is optional**: not every case has public data; when absent write a qualitative outcome in the three-part form "what was done → what effect/standard was reached → verifiable basis" (template in case-engine.md) — never fabricate numbers.
-- **Industry-academia link (optional, vocational schools)**: for higher/secondary vocational courses, if a case maps to a real job task, add "industry-academia: corresponds to the ×× job task of ×× course"; write it when it applies, skip when it doesn't.
-- Cases must be **detailed and actionable** (implementation process in steps, replicable operations); never write vague lines like "this case demonstrates XX".
-- See `references/case-engine.md`.
+### 3.2 案例引擎（解决内容空洞，六要素）
+- 每个知识 / 技能点必须嵌入案例，统一结构化格式（六要素，**删除"讲法建议"**）：
+  `案例背景 → 与教学目标的关系 → 实施过程（分步、可操作） → 成果与数据 → 教学点评 → 课堂提问（≥2 个）`
+- **成果与数据是可选项**：不是每个案例都有公开数据；无公开数据时按"做了什么→达到什么效果/标准→可验证依据"三段式写定性成果（模板见 case-engine.md），禁止编造数字。
+- **产教融合（职业院校可选强化）**：高职/中职课程案例若可落到真实岗位任务，标注"产教融合：对应××岗位的××任务"，有则写、无则不写。
+- 案例必须**详细、可操作**（实施过程分步骤、给出可复刻的操作路径），禁止只写"某案例展示了 XX"这种空泛描述。
+- 详见 `references/case-engine.md`。
 
-### 3.3 Image engine (fixes poor readability)
-- Image minimums by course type: **lab/practice courses ≥6 images/session; mixed ≥5; theory ≥4**.
-- Combination strategy: case-related images prefer web search for real images (similar works, case screenshots, photos) with sources noted; the rest AI-generated teaching diagrams (**prompts must force "no watermark, no logo, no text watermark"**).
-- UI option A: no screenshot placeholders; option B: write "insert XX screenshot here" placeholders.
-- Check AI-generated images for OCR typos in embedded titles (common defect) and regenerate if found.
-- **Structural-accuracy risk (engineering courses)**: for structure-sensitive images (equipment cutaways, section views, circuit diagrams, assemblies), AI generation can draw structures wrong (flange reversed, wrong blade count) — prefer web or teacher-provided images; if AI-generated, verify structure part by part (see image-engine.md).
-- See `references/image-engine.md`.
+### 3.3 配图引擎（解决可读性差）
+- 配图下限（按课程类型）：**上机/实训类 ≥6 张/节；混合类 ≥5 张/节；理论类 ≥4 张/节**。
+- 组合策略：案例相关图优先联网搜真实图（同类作品、案例截图、实拍）并标注来源；其余 AI 生成教学示意（**生成 prompt 强制加"无水印、无logo、无文字水印"**）。
+- **网图优先必须"搜对"再下结论**：从案例提取可搜实体（作品名/品牌名/界面/原型），中英双语各搜一轮，`image_short_edge_px ≥640` 过滤；只有确认"该类型本无网图"（流程/原理/结构等抽象示意）才转 AI 生成，并向用户说明。**禁止只搜一次宽泛关键词就放弃网图。**
+- **写实图分工**：A 案例作品展示→网图优先（搜不到才降级 AI）；B 实物/场景示意→AI 写实生成（prompt 带详细摄影语言：镜头/光照/材质）；C 人物氛围→少量点缀。
+- **AI 生成图质量优先**：豆包环境优先用 seedream 5.0 Pro（会员）＞ 5.0 flash；生图走 doubao-creative-design 轻量流程（产物路由→澄清→模型改写），按知识类型选风格（流程→扁平示意图、抽象概念→简约插画、案例→写实），prompt 必带"无水印、无logo、无文字水印、无边框"、负面词（blurry/distorted/extra limbs/watermark/text 等）且画面尽量无文字；**并按反 AI 味清单写 prompt（禁紫蓝渐变/玻璃卡片/无意义装饰，不堆"8K 超写实"质量词）**。
+- **每张生成图：写详细 prompt → 过 7 项自查（内容正确/文字风险/AI 味/负面词/类型匹配/硬约束/存档就绪）→ 合格才发出 → 详细 prompt 随图存档**（生成后 prompt 与图一并保存，可追溯/复用/重刷）。自查清单与存档格式见 `ai-image-engine.md` §2.4、§2.8。
+- **界面图默认选项 B**（留"此处建议插入：XX 截图"占位）：覆盖桌面软件（含理工科专业软件 CAD/MATLAB 等）/手机 App/网页全类型；选项 A 时 AI 只生成"干净可读的教学概念示意"，不冒充真软件。
+- 所有生成图注意检查 OCR 错字（AI 生成图标题文字易错），发现错字需重刷（A 级硬伤红线）；再按"主体清晰/无畸形乱码"做质量快检，不合格重刷。**整本配图不强制全局风格统一**：内容/知识类型优先，同类型内部保持一致即可。
+- **理工/工程类结构图风险**：设备结构图、剖面图、电路图等"结构正确性敏感"图，AI 生成可能结构画错（法兰反、叶片数错），优先网图或教师提供图；确需 AI 生成须逐项核对结构。
+- 详见 `references/image-engine.md` 与 `references/ai-image-engine.md`（网图强化 + 反 AI 味 + 生图质量 + prompt 自查存档规则）。
 
-### 3.4 Time budget (budget first, then content; fixes "content can't fill the hours")
-- Add a **"time arrangement"** line to every session table listing phases with minutes: introduction, lecture, demo, student practice, roving coaching, summary & comments.
-- **Lab/practice phases must split into "student independent practice X min" + "teacher roving coaching X min"**.
-- **All phase minutes must sum to the session total** (e.g. 4 hours = 180 min). Budget first, then write content.
+### 3.4 时间预算（先定预算再写内容，解决"内容不够填课时"）
+- 生成教案表时新增一行 **"时间安排"**：以表格式/分行式列出各环节——导入、讲授、演示、学生练习、巡回辅导、点评小结——每环节标注分钟。
+- **上机/实训环节必须拆出"学生独立练习 X 分钟"和"教师巡回辅导 X 分钟"两项**。
+- **全部环节时长相加必须等于本次课总课时**（如 4 课时 = 180 分钟）。先算预算再写内容，杜绝内容不足或超时。
 
-### 3.5 Lesson plan structure
-- Secondary vs university structures differ; pick by level; single-session vs whole-book differ; pick by mode.
-- See `references/lesson-structures.md`.
+### 3.5 教案结构
+- 初高中与大学结构不同，按学段选择模板；单节与整本结构不同，按模式组装。
+- 详见 `references/lesson-structures.md`。
 
-## 4 · Interactive Review (numeric protocol, lazy-user friendly)
+## 4 · 交互审核（数字协议，懒人友好）
 
-After each session, prompt the user to reply with **a single number** (no typing):
+每一节生成后，提示用户**用一个数字回复**（不用打字）：
 
 ```
-1 = continue to next session (this one is OK)
-0 = generate all remaining sessions, no more per-session review (whole-book mode)
-W{week} = spot-check/re-do only the given weeks (e.g. W2 = review only week 2; W5-8 = review weeks 5-8; avoids per-session review for large books)
-2 = regenerate images
-3 = regenerate cases
-4 = regenerate content
-5 / 6 / 7 = regenerate specified combinations (agree the mapping on first interaction, e.g. 5=content+images, 6=content+cases, 7=cases+images)
-9 = redo everything for this session
+1 = 继续下一节（本节能用）
+0 = 直接生成全部，不再逐节审核
+W{周次} = 只抽查/重做指定周（如 W2 = 只审第 2 周；W5-8 = 审第 5-8 周；整本审核时免去逐节过目）
+2 = 图片重新生成
+3 = 案例重新生成
+4 = 内容重新生成
+5 / 6 / 7 = 指定组合重新生成（具体组合首次交互时与用户约定，如 5=内容+图片、6=内容+案例、7=案例+图片）
+9 = 全部重新做
 ```
 
-Rules:
-- The number is the instruction; if parsing fails, restate the format and ask again — never guess.
-- On regenerate triggers, rerun the corresponding engine (weak cases → re-search/swap; bad images → add/replace; hollow content → rewrite richer), say what changed, ask for the number again.
-- Max 3 automatic iterations per session; after 3, ask the user for specific changes — no infinite loops.
-- Full rules: `references/interaction-protocol.md`.
+规则：
+- 数字即指令，解析失败时重述格式并要求重发，不猜测。
+- 触发重生成的维度：回到对应引擎重新执行（案例弱 → 重检索/换案例；图片差 → 补图/换图；内容空 → 重写充实），说明改了什么，再次请用户数字确认。
+- 同一节最多自动迭代 3 轮；3 轮后仍不满意，询问用户具体修改要求，不无限循环。
+- 完整规则见 `references/interaction-protocol.md`。
 
-## 4.5 · Cross-Platform Tool Mapping
+## 4.5 · 跨平台工具映射表
 
-The content flow (collect → pre-research → cases → images → review → formatting → output) is platform-independent; only tool calls differ by host. Doubao is the default; on other platforms substitute the corresponding capability below — the flow and acceptance criteria stay the same:
+本技能的内容流程（采集→预研→案例→配图→审核→排版→输出）与平台无关；仅工具调用因宿主而异。中文版默认按豆包执行，其他平台按下表替换对应能力，流程与验收标准不变：
 
-| Capability | Doubao (default) | Claude Code / Cursor | Other AI |
+| 能力 | 豆包（默认） | Claude Code / Cursor | 其他 AI |
 |---|---|---|---|
-| Web search (talent plans, cases) | general_search / web_fetch | web search / fetch tools | host search |
-| Real case image search | image_search | platform image search | host image search |
-| AI teaching image generation | image_gen | platform image generation | host image generation |
-| Word create/template/audit | word skill (read.py / audit.py / catalogue.py / template branch) | python-docx + platform document tools (parse template → fill → verify) | host document capability (same acceptance criteria) |
-| Local file / batch work | PowerShell / Python | Bash / Python | host shell |
-| Image compression | Python + Pillow | same | same |
+| 联网检索/搜人才方案/搜案例 | general_search / web_fetch | Web search / fetch 工具 | 宿主搜索能力 |
+| 搜真实案例图 | image_search（拆实体关键词、中英双语，见 ai-image-engine） | 平台图像搜索 | 宿主搜图能力 |
+| AI 生成教学图 | doubao-creative-design + seedream-50（5.0 Pro 优先，规则见 ai-image-engine） | 平台图像生成工具 | 宿主生图能力 |
+| Word 创建/套模板/审计验收 | word skill（read.py / audit.py / catalogue.py / 模板分支） | python-docx + 平台文档能力（对应流程：解析模板→填充→回读校验） | 宿主文档能力（沿用同一套验收标准） |
+| 本地文件/批量处理 | PowerShell / Python | Bash / Python | 宿主 shell |
+| 图片压缩 | Python + Pillow | 同左 | 同左 |
 
-**Content protocols (must-asks / pre-research / six elements / time budget / numeric review / formatting rules) are identical on every platform** — only the tool channel differs.
+注意：生成教案的**内容协议（必问项/预研/六要素/时间预算/数字审核/排版规范）在所有平台必须一致**，只有工具通道不同。
 
-## 5 · Output Word
+## 5 · 输出 Word
 
-- Default deliverable: editable Word (.docx), standard naming, no emoji.
-- **Free layout**: standard structure per `references/lesson-structures.md` (cover → course info table → per-session tables).
-- **School template**: user uploads template .docx (.doc converted to .docx baseline) → parse structure (cover / course info table / session tables) → fill by fields, keep fixed content, **clean example content and stale data (e.g. old-plan images)**.
-- **Old-plan update**: user uploads old .docx → identify structure → targeted in-place updates only where the user asks.
-- **Formatting rules (required; fixes "content crammed together")**: headings on their own lines (phase/case titles bold on their own line), content split into lines (① ② ③ each on its own line), case six elements as separate blocks (bold labels 【Background】【Implementation】【Results】【Teaching comment】【Questions】+ content lines), time arrangement on separate lines, line spacing 1.15, space before/after paragraphs, whitespace before images and after captions, caption for every image.
-- **Size control**: compress AI images before embedding (long edge ≤1000px, JPEG quality 85) to avoid huge docx; clean template-borne legacy example images before generation.
-- **File-lock handling**: if the target docx is open in Word it cannot be overwritten — output to a temp filename first (e.g. "-formatted-v2.docx"), verify, then ask the user to close the original before replacing; rerun audit after replacement.
-- On **Doubao**, Word read/create/template/audit always uses the word skill flow (read.py, audit.py, catalogue.py, template branch) — never hand-roll a simplified reader; on other platforms substitute per the mapping table, keeping the same acceptance criteria.
-- See `references/template-and-update.md`.
-- **Validation script (optional, when Python is available)**: `scripts/validate_lesson_plan.py` auto-checks "phase minutes sum to session total" and "image count ≥ minimum" (input format in the script header); without Python, verify manually per the acceptance checklist — the rules are the same.
+- 默认交付可编辑 Word（.docx），命名规范、无 emoji。
+- **自由版式**：按 `references/lesson-structures.md` 的标准结构生成（封面 → 课程信息表 → 每次课教案表）。
+- **套学校模板**：用户上传学校模板 .docx（.doc 先转 .docx 基线）→ 解析结构（封面 / 课程信息表 / 每次课表）→ 按模板栏目填充，固定内容保留，**示例内容与旧数据（如旧教案图片）清理**。
+- **老教案更新**：用户上传旧教案 .docx → 识别结构 → 按用户说明的更新点做保留式定点更新。
+- **排版规范（必须执行，解决"内容挤在一起"）**：小标题逐行（环节/案例标题加粗独占一行）、内容分行（①②③每项一行）、案例六要素各自成段（【背景】【实施过程】等加粗小标题+内容行）、时间安排分行、段落行距 1.15、段前后留白、图片前/图注后留白、每张图配图注。
+- **体积控制**：AI 生成图嵌入前压缩（长边 ≤1000px 的 JPEG，质量 85），避免 docx 体积过大；模板自带的旧示例图片在生成前清理。
+- **文件占用处理**：目标 docx 正被 Word 打开时无法覆盖，先输出临时文件名（如"-排版优化版.docx"），验证后请用户关闭原文件再替换；替换后必须重跑 audit。
+- Word 的读取、创建、套模板、编辑、验收在**豆包环境**一律走 word skill 的既有流程（scripts/read.py、audit.py、catalogue.py、模板填写分支），不得自写简化读取器；其他平台按"跨平台工具映射表"替换为宿主文档能力，但**验收标准相同**（audit 0 错误、图片逐节核对、模板固定内容未动）。
+- 详见 `references/template-and-update.md`。
+- **校验脚本（可选，平台有 Python 时执行）**：`scripts/validate_lesson_plan.py` 自动校验"时间安排分钟相加=总课时""配图数量≥下限"（输入格式见脚本注释）；无 Python 环境时按验收清单人工核对，规则不变。
 
-## Lessons Learned
+## 实测经验（踩坑防错）
 
-This skill has been through a full production test (higher-vocational "Digital Visual Design", whole book, 18 sessions × 6 images). Discovered issues and fixes are recorded in `references/lessons-learned.md` — read it before executing, especially: template content-row location failures (locate by header row), duplicated time-arrangement lines, OCR typos in generated images, Word file locks, template legacy images bloating file size.
+本 skill 已经历完整实测迭代（高职《数字视觉设计》整本 18 次课 × 6 图），发现并修复的问题全部记录在 `references/lessons-learned.md`，执行前建议通读，尤其注意：模板内容行开头文字不同导致漏填（按表头行定位）、时间安排重复拼接、生成图 OCR 错字、Word 占用替换、模板旧图膨胀体积。
 
-## Reference Docs
+## 参考文档
 
-| File | Content |
+| 文件 | 内容 |
 |---|---|
-| `references/lesson-structures.md` | Secondary / university, session / whole-book structures, formatting rules |
-| `references/case-engine.md` | Six-element case format, dual-channel acquisition, built-in case templates |
-| `references/image-engine.md` | Image minimums, web-vs-AI tradeoffs & copyright, watermark handling, UI image options, docx embedding & size control |
-| `references/interaction-protocol.md` | Numeric protocol full rules, regeneration handling, whole-book flow |
-| `references/template-and-update.md` | School-template and old-plan update flows, Word-lock replacement |
-| `references/lessons-learned.md` | Production pitfalls (location failures, time duplication, OCR typos, size, replacement) and fixes; community review feedback |
-| `scripts/validate_lesson_plan.py` | Auto-validation script for time budget & image minimums (optional, Python) |
+| `references/lesson-structures.md` | 初高中 / 大学、单节 / 整本的教案结构模板与栏目清单、排版规范 |
+| `references/case-engine.md` | 案例六要素格式、双通道获取策略、内置案例模板 |
+| `references/image-engine.md` | 配图下限、网图取舍与版权、水印处理、界面图选项、docx 插图与体积控制 |
+| `references/ai-image-engine.md` | AI 教学配图增强：网图优先强化、反 AI 味清单与质感纪律（cinema-dna）、负面词、prompt 密度原则、写实分工、界面图全类型（默认选项 B）、prompt 自查 7 项与随图存档、A+B 质检分级 |
+| `references/interaction-protocol.md` | 数字审核协议完整规则、重生成处理、整本逐节流程 |
+| `references/template-and-update.md` | 套学校模板与老教案更新的完整流程、Word 占用替换 |
+| `references/lessons-learned.md` | 实测踩坑记录（漏填定位、时间重复、OCR 错字、体积、替换等）与解法、虾评评测反馈 |
+| `scripts/validate_lesson_plan.py` | 时间预算与配图下限自动校验脚本（可选，Python 环境） |

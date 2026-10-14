@@ -1,53 +1,55 @@
-# Image Engine (image-engine)
+# 配图引擎（image-engine）
 
-Goal: eliminate "walls of text" — every lesson plan is illustrated and readable. Lesson learned: software-operation/lab courses lose images the fastest; enforce **image minimums** and guard against two hard defects in AI-generated images: watermarks and OCR typos.
+目标：消灭"满页文字"——每份教案图文并茂、可读性强。实测结论：软件操作类/上机类课程最容易缺图，必须按**配图下限**硬性保证，且 AI 生成图要防"水印、OCR 错字"两类硬伤。
 
-## Image Minimums (Required, by Course Type)
+## 配图下限（强制，按课程类型）
 
-- **Lab / practice courses: ≥6 images per session**
-- **Mixed courses (theory + lab): ≥5 per session**
-- **Theory courses: ≥4 per session**
+- **上机 / 实训类课程：每节 ≥6 张**
+- **混合类课程（理论+上机）：每节 ≥5 张**
+- **理论类课程：每节 ≥4 张**
 
-Verify per session in whole-book mode; any session below the minimum must be topped up. Batch generation must not "cut corners" — every session gets its full quota.
+整本模式逐节统计核对，任何一节低于下限必须补图；批量生成时严禁"偷懒"——每节都必须足额配图。
 
-## Combination Strategy (by Priority)
+## 组合策略（按优先级执行）
 
-1. **Case images prefer real web images**: for case-related content (real works, case screenshots, photos, similar works) use image search / general search.
-   - Cases are the core — real images greatly boost persuasiveness (e.g. for an IP topic find Ling Na Bei Er or Pop Mart official images; for posters find famous posters).
-   - Third-party images: note the source in the caption ("public case, compiled from sources — please verify"); never deliver a third-party URL as the artifact.
-   - **Tradeoff rule**: web images only for "real case/work display"; skip images of uncertain copyright, with watermarks, or blurry — degrade to AI generation or placeholder. Let the user confirm adoption in interactive review (the "2 = regenerate images" dimension).
-2. **AI-generated teaching diagrams**: when no suitable image is found (abstract content: flows, architectures, comparisons, diagrams, interface concepts), generate with the host image-generation capability.
-   - **Force in prompts: "no watermark, no logo, no text watermark, no border"** — eliminates watermarks not allowed in teaching from the source.
-   - For abstract visualization; caption notes "AI-generated".
-   - **Check AI images for OCR typos after generation**: embedded titles/text often have typos (e.g. "color three elements" garbled). Regenerate any image with a typo — never ship a typo'd image.
-3. **Placeholder fallback**: when nothing above fits (or the user chose UI option B), write "insert XX image here (suggested source: textbook page N / official site / photo)".
+> ⚠️ **v1.2 增强（实测痛点修复）**：若出现"选了网图优先、成品却 95% 是生成图"或"AI 图难看"，先执行 `ai-image-engine.md` 的网图强化（拆实体关键词、中英双语、尺寸过滤）与生图质量规则（5.0 Pro 优先、风格映射、prompt 硬约束、三步质检），再回到本节兜底。
 
-## UI Image Options (must-ask before generation)
+1. **案例图优先联网搜真实图**：案例相关（真实作品、案例截图、实拍、同类案例）用 image_search / 通用搜索检索。
+   - 案例是核心，能找到相关真实图片会大大提升教案说服力（如讲 IP 就找玲娜贝儿、泡泡玛特官方图；讲海报找知名海报）。
+   - 搜到的图属于第三方内容：教案内以图注形式标注来源（"公开案例·检索整理，请老师核对"），不把 URL 当交付物。
+   - **取舍原则**：网图只用于"真实案例/作品展示"；拿不准版权、有水印、模糊的图不采用，降级为 AI 生成或占位标注。是否采用需在交互审核中让用户确认（可归入"图片重新生成 2"维度）。
+2. **AI 生成教学示意**：检索不到合适图时（流程、架构、对比、示意、界面概念图等抽象内容），用图像生成工具生成。
+   - **生成 prompt 强制加入："无水印、无logo、无文字水印、无边框"**，从源头杜绝教学不允许的水印。
+   - 生成图用于抽象概念可视化，图注标注"AI 生成"。
+   - **生成后必须检查 OCR 错字**：AI 生成图里的标题/文字常出现错字（如"色彩三要素"写成"色色三因素"、"图形创意"写成"图形创意步法"）。发现错字必须重刷该图，禁止带错字进教案。
+3. **占位标注兜底**：以上都不合适时（或用户选择界面图选项 B），在对应位置写占位标注："此处建议插入：××图（来源建议：教材第×页 / 官网 / 实拍）"。
 
-- **Option A (recommended)**: all AI-generated teaching diagrams, **no screenshot placeholders**. Teachers usually don't take their own screenshots; A is less work and immediately usable.
-- **Option B**: leave "insert XX screenshot here" placeholders for the teacher to add their own classroom screenshots later.
+## 界面图选项（生成前必问）
 
-## Structural-Accuracy Risk (engineering courses — read first, v1.1)
+- **选项 A**：全部 AI 生成教学示意，**不留截图占位**。
+- **选项 B（推荐，v1.3 起）**：留"此处插入 XX 截图"占位，方便老师课后补自己课堂的界面截图。界面图需覆盖**桌面软件（含理工科专业软件 CAD/MATLAB 等）/ 手机 App / 网页**全类型；专业软件界面 AI 生成几乎必乱码，真截图只能老师自己截，故默认推荐 B。
 
-For **structure-sensitive images** (equipment cutaways, section views, circuit diagrams, mechanical assemblies, piping layouts), AI generation can draw the **structure wrong** (flange reversed, wrong impeller blade count, wrong circuit connections, wrong piping direction) — far worse for teaching than a typo.
+## 结构正确性风险（理工/工程类课程必读，v1.1）
 
-- For engineering courses, **structural/principle diagrams prefer web or teacher-provided images** (textbook figures, manufacturer manual figures, real photos); AI generation is only for rough illustration.
-- If AI-generated, **verify the structure part by part** after generation: part counts, orientation, and connections against textbook common sense; when unsure, switch to a web image or a placeholder "insert textbook page N diagram here".
-- This joins the OCR-typo check under the "2 = regenerate images" human-verification dimension.
+AI 生成**设备结构图、剖面图、电路图、机械装配图、流程图部件**等"结构正确性敏感"的图时，除 OCR 错字外还可能**结构画错**（法兰方向画反、叶轮叶片数不对、电路连接错误、管道走向错误），教学危害远大于错字。
 
-## Sources & Copyright
+- 理工/工程类课程的**结构图、原理图优先用网图或教师提供图**（教材配图、厂家手册图、实物照片），AI 生成仅作示意。
+- 确需 AI 生成结构图时，生成后**逐项核对结构**：部件数量、方向、连接关系是否符合教材常识；拿不准就换网图或占位标注"此处建议插入教材第×页结构图"。
+- 此项与 OCR 错字检查一并纳入"图片重新生成 2"维度的人工核对。
 
-- Prefer: textbook images, official sites, official case images, commercially usable sources (note author/site).
-- Always note sources; skip images of uncertain copyright, degrading to AI generation or placeholder.
-- Never deliver a third-party image URL as the artifact; real images enter the plan as "source note + caption".
+## 图源与版权
 
-## Position & Captions
+- 优先选用：教材配图、官网、官方案例图、可商用图源（标注作者/站点）。
+- 一律标注来源；拿不准版权的图不采用，降级到 AI 生成或占位标注。
+- 不把第三方图的 URL 直接当交付物；真实图以"引用来源 + 图注"形式进入教案。
 
-- Place images near the knowledge point they illustrate, with a caption: "Fig N ｜ title ｜ source (AI-generated / public case)".
-- Number captions continuously per session (Fig 1-1, 1-2 …; session N uses the N- prefix), consistent with the image folder naming (lesson<N>_img<M>.jpg).
+## 配图位置与图注
 
-## Embedding into docx & Size Control
+- 图放在对应知识点的段落附近，配图注："图 N ｜ 标题 ｜ 来源（AI 生成/公开案例）"。
+- 每节图注编号连续（图1-1、图1-2…，第 N 节用 N- 前缀），与配图文件夹命名一致（lesson<N>_img<M>.jpg）。
 
-- Insert images via the host's document flow (asset handling, proportional scaling, no cropping of original information).
-- **Size control (a real production lesson)**: embedding 108 AI originals (2048px-class) directly balloons a docx to 240MB+. Compress before embedding: **long edge ≤1000px, JPEG quality 85** — 108 images total ~7-8MB; also strip legacy images from the source template (the template itself may be 40MB+; make an image-free clean copy before filling).
-- Keep compressed and original images separately: originals (PNG) archived; compressed JPEGs used for embedding and the delivered image folder.
+## 插入 docx 与体积控制
+
+- 图片插入 Word 统一走 word skill 流程（asset 处理、等比缩放、不裁剪原信息）。
+- **体积控制（实测硬伤）**：108 张 AI 原图（2048px 级）直接嵌入 docx 会膨胀到 240MB+。嵌入前必须压缩：**长边 ≤1000px、JPEG 质量 85**，108 张图整体控制在 7-8MB；同时清理模板自带旧教案图片（模板源本身可能 40MB+，需先做无图清洁版再套用）。
+- 压缩图与原图分离管理：原图（PNG）存档，压缩 JPEG 用于嵌入 docx 和交付配图文件夹。
