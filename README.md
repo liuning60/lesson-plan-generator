@@ -4,7 +4,7 @@ Generate **submission-ready Word lesson plans** from a course name — whole-ter
 
 Solves the two core weaknesses of AI-generated lesson plans:
 - **Hollow content** — every knowledge point embeds a six-element real case (Background / relation to objectives / implementation process / results & data / teaching comment / class questions); implementation steps are actionable; never fabricate data
-- **Poor readability (no images)** — image minimums enforced (lab/practice ≥6 per session, mixed ≥5, theory ≥4); case images prefer real web images with sources; AI images are watermark-free and typo-checked
+- **Poor readability (no images)** — image minimums enforced (lab/practice ≥6 per session, mixed ≥5, theory ≥4), counting **real images only**; deterministic diagrams are added as Word-native "supplementary content"
 
 Also guarantees:
 - **Exact time budgeting** — "time arrangement" row per session; lab phases split into "student independent practice + teacher roving coaching"; phase minutes sum to the session total
@@ -12,17 +12,14 @@ Also guarantees:
 - **Lazy-friendly review** — reply with a single number (1 continue / 0 generate all / 2 images / 3 cases / 4 content / 5·6·7 combos / 9 redo)
 - **Pre-research for whole books** — searches talent-training plans first, drafts a ~500-word objectives & content framework, waits for your verification
 
-## Image Engine v1.4 (2026-10 upgrade)
+## Image Engine v1.5 (2026-10 rework)
 
-Fixes two real-world pain points: "AI-generated images look bad" and "web-image-first still ends up 95% generated images".
+"Images" vs "supplementary content" — fixes three real-world pain points: "AI-generated images look bad", "web-image-first still ends up 95% generated images", and "deterministic diagrams waste quota".
 
-- **Web-image-first actually works** — extract searchable entities from cases (work names / brand names / software UI / prototypes), search in both Chinese and English, filter ≥640px; only switch to AI generation after confirming the type has no web source (flows / principles / structures and other abstract diagrams)
-- **Anti-AI-taste checklist** — no purple-blue gradients, no glassmorphism cards, no meaningless decoration, no fake chart clutter; no "8K / hyperreal" quality-word stacking
-- **Texture discipline (absorbed from cinema-dna)** — banned prompt words (rich detail / epic / CGI render / game cinematic etc.), density restraint (1 primary clue + ≤1 secondary clue per image), one texture base per set, controlled imperfection
-- **Realistic-image division of labor** — case works → web images first; objects/scenes → AI realistic (detailed photographic language: lens / light source / material / action); people & atmosphere → light accents only
-- **7-point prompt self-check** — content correctness / text risk / AI-taste scan / negative words / type match / hard constraints / archive-ready; never send a prompt that fails any check
-- **Prompts archived with images** — every generated image is saved with its full prompt (`lesson{N}-prompts.md`), traceable, reusable, re-generable
-- **UI images: all types, default option B** — desktop software (incl. pro tools like CAD/MATLAB) / mobile apps / web pages; default "screenshot placeholder" for teachers to fill in real shots (AI always garbles pro-software UIs)
+- **"Images" = strictly real pictures** — the image minimums (lab/practice ≥6 per session, mixed ≥5, theory ≥4) count only real images: real case-work shots, real software UI screenshots, real industry scenes / on-site photos, real output shots; sourced from the web with attribution
+- **UI images = real screenshots (from the web)** — official software Help / real tutorial screenshots; no AI-faked UIs, no Word-drawn stand-ins; fall back to an "insert XX screenshot here" placeholder only when none can be found
+- **Deterministic diagrams = Word native graphics (supplementary content)** — flows / structures / UI layouts / charts / trends drawn in Word (shapes + text boxes + arrows): zero quota, editable, **not counted in the image minimums**; trend/comparison charts must never fabricate data
+- **AI generation = last resort** — only for case content that Word cannot draw AND no qualified real image can be found online (saves quota); when required, follow the anti-AI-taste checklist, texture discipline (from cinema-dna), 7-point prompt self-check and prompt archiving
 - **Free execution channel, no forced visual uniformity** — no paid image APIs; content/knowledge type outranks visual consistency
 
 ## Install
@@ -59,9 +56,9 @@ lesson-plan-generator/
 └── lesson-plan-generator/        ← the skill
     ├── SKILL.md
     └── references/
-        ├── ai-image-engine.md      image enhancement: web-image-first, anti-AI-taste & texture discipline, 7-point prompt check & archiving (v1.4)
+        ├── ai-image-engine.md      image enhancement: real-image-first, Word native graphics, anti-AI-taste & texture discipline, 7-point prompt check & archiving (v1.5)
         ├── case-engine.md          six-element cases & retrieval strategy
-        ├── image-engine.md         image minimums, watermarks, web-vs-AI, size control
+        ├── image-engine.md         image minimums (real images only), Word supplementary graphics, size control
         ├── interaction-protocol.md numeric review protocol
         ├── lesson-structures.md    university/secondary structures, time budget, formatting
         ├── template-and-update.md  school templates, old-plan updates, pitfall fixes
